@@ -1,0 +1,75 @@
+# Build artifacts
+bin/
+obj/
+*.user
+*.userosscache
+*.suo
+*.tlog
+*.log
+*.cache
+*.ilk
+*.pdb
+*.rsp
+*.vspscc
+*.vssscc
+*.vspx
+*.vsp
+*.ncb
+*.aps
+*.sdf
+*.opensdf
+*.vc.db
+*.VC.db
+
+# MAUI and Xamarin
+**/platforms/*
+/platforms/*
+**/*.apk
+**/*.aab
+**/*.app
+**/*.xcarchive
+**/*.dsym
+**/*.ipa
+**/*.xcuserstate
+**/MainPage.g.cs
+**/*.g.cs
+**/*.g.i.cs
+
+# macOS/iOS
+*.DS_Store
+xcuserdata/
+*.xcodeproj/*
+*.xcworkspace/*
+*.xcuserstate
+*.xcsettings
+*.xcuserdatad
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Visual Studio
+.vs/
+*.dbmdl
+*.jfm
+*.vspscc
+
+# Others
+TestResults/
+*.nupkg
+*.snupkg
+*.sln.docstates
+*.coverage
+*.coveragexml
+
+# User secrets
+secrets.json
+
+# Local tools
+tools/
+
+# Generated
+Generated/
+GeneratedCode/

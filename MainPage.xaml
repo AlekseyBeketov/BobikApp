@@ -1,0 +1,116 @@
+﻿<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:BobikApp"
+             x:Class="BobikApp.MainPage"
+             Loaded="DownScroll">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Style TargetType="Label">
+                <Setter Property="FontSize" Value="16"/>
+            </Style>
+            <Style TargetType="Entry">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+            <Style TargetType="Button">
+                <Setter Property="FontSize" Value="16"/>
+                <Setter Property="TextColor" Value="White"/>
+            </Style>
+            <local:RoleToColorConverter x:Key="RoleToColorConverter" />
+            <local:RoleToHorizontalOptionsConverter x:Key="RoleToHorizontalOptionsConverter" />
+            <local:WidthConverter x:Key="WidthConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto">
+        <!-- Шапка -->
+        <StackLayout Grid.Row="0" BackgroundColor="#08457E" Padding="10">
+            <ImageButton x:Name="MuteButton" Padding="7" 
+                         WidthRequest="30" HeightRequest="30" 
+                         BackgroundColor="Transparent"
+                         CornerRadius="10"
+                         VerticalOptions="Center" />
+        </StackLayout>
+
+        <!-- Основная область с сообщениями -->
+        <CollectionView x:Name="MessageHistoryView" Grid.Row="1"
+                        ItemsSource="{Binding MessageHistory}"
+                        VerticalOptions="FillAndExpand"
+                        Margin="10,0, 0, 0"
+                        SelectionMode="None">
+            
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Grid HorizontalOptions="FillAndExpand" Margin="0,5" Padding="10,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Frame Grid.Column="0"
+                               HorizontalOptions="{Binding Role, Converter={StaticResource RoleToHorizontalOptionsConverter}}"
+                               VerticalOptions="Center"
+                               Padding="10"
+                               MaximumWidthRequest="{Binding Source={x:Reference MessageHistoryView}, Path=Width, Converter={StaticResource WidthConverter}}"
+                               CornerRadius="20"
+                               HasShadow="True"
+                               BackgroundColor="{Binding Role, Converter={StaticResource RoleToColorConverter}}">
+                            
+                            <Frame.Shadow>
+                                <Shadow Brush="Black"
+                                        Offset="5,5"
+                                        Radius="10"
+                                        Opacity="0.3" />
+                            </Frame.Shadow>
+
+                            <Grid ColumnDefinitions="*,Auto">
+                                <!-- Сообщение -->
+                                <Label Grid.Column="0"
+                                       Text="{Binding DisplayContent}"
+                                       FontSize="16"
+                                       TextColor="White"
+                                       LineBreakMode="WordWrap"
+                                       VerticalOptions="Start"
+                                       HorizontalOptions="FillAndExpand" />
+
+                                <!-- Кнопка копирования -->
+                                <ImageButton Grid.Column="1"
+                                             Source="/Users/alexbeketov/Developer/BobikApp/Resources/Icons/ic-copy.png"
+                                             BackgroundColor="Transparent"
+                                             HeightRequest="16"
+                                             WidthRequest="16"
+                                             HorizontalOptions="End"
+                                             VerticalOptions="Start"
+                                             Margin="10,0,0,0"
+                                             Clicked="OnCopyClicked"
+                                             CommandParameter="{Binding DisplayContent}" />
+                            </Grid>
+                        </Frame>
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <!-- Нижняя панель с полем ввода -->
+        <StackLayout Grid.Row="2" Padding="10,5,10,10" BackgroundColor="#DCDCDC" Spacing="3">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto">
+                <Entry x:Name="MessageEntry" HeightRequest="50" TextColor="Black" BackgroundColor="White" 
+                       Margin="0,5,0,5"
+                       VerticalOptions="Center" Grid.Column="0" Placeholder="Введите сообщение..." />
+                
+                <ImageButton x:Name="SendButton" Padding="7" Clicked="OnSendButtonClicked" Grid.Column="1" 
+                             WidthRequest="50" HeightRequest="50" BackgroundColor="Transparent"
+                             Source="/Users/alexbeketov/Developer/BobikApp/Resources/Icons/send_icon.png"
+                             VerticalOptions="Center" />
+            </Grid>
+
+            <StackLayout Orientation="Horizontal">
+                <Button x:Name="RecordButton" Text="Начать запись" Clicked="OnRecordButtonClicked" 
+                       
+                        HeightRequest="40" BackgroundColor="#273f87" CornerRadius="12" HorizontalOptions="FillAndExpand"/>
+                <Label x:Name="StatusLabel"/>
+            </StackLayout>
+        </StackLayout>
+    </Grid>
+</ContentPage>
