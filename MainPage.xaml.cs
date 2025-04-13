@@ -23,12 +23,10 @@ public partial class MainPage : ContentPage, INotifyPropertyChanged
 	private bool isRecording;
 	private StringBuilder recordedText = new();
 	private DateTime lastSpeechTime;
-	private const double SilenceSeconds = 1.5;
 	
 	private readonly object recognizerLock = new();
 	private readonly SpeechToTextService speechService = new();
 	private readonly TextToSpeechService tts = new();
-	
 	
 	//private SpeechSynthesizer synthesizer = new SpeechSynthesizer(); #для винды
 	// Создаем экземпляр синтезатора речи

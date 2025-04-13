@@ -49,6 +49,8 @@ public class SpeechToTextService
         byte[] buffer = new byte[4096];
         var stdout = micProcess.StandardOutput.BaseStream;
 
+        bool hasUserSaidSomethingAfterKeyword = false;
+
         while (true)
         {
             int bytesRead = stdout.Read(buffer, 0, buffer.Length);
@@ -70,11 +72,18 @@ public class SpeechToTextService
                             isRecording = true;
                             recordedText.Clear();
                             lastSpeechTime = DateTime.Now;
+                            hasUserSaidSomethingAfterKeyword = false;
                             OnKeywordDetected?.Invoke();
+                            continue;
                         }
 
                         if (isRecording)
                         {
+                            if (!resultText.Contains("бобик", StringComparison.OrdinalIgnoreCase))
+                            {
+                                hasUserSaidSomethingAfterKeyword = true;
+                            }
+
                             recordedText.Append(resultText + " ");
                             lastSpeechTime = DateTime.Now;
                         }
@@ -93,14 +102,19 @@ public class SpeechToTextService
                 }
             }
 
-            if (isRecording && (DateTime.Now - lastSpeechTime).TotalSeconds > SilenceSeconds)
+            if (isRecording)
             {
-                isRecording = false;
-                string final = recordedText.ToString().Trim();
-                if (!string.IsNullOrWhiteSpace(final))
-                    OnTextFinalized?.Invoke(final);
+                double silenceLimit = hasUserSaidSomethingAfterKeyword ? 1.5 : 4.0;
 
-                recordedText.Clear();
+                if ((DateTime.Now - lastSpeechTime).TotalSeconds > silenceLimit)
+                {
+                    isRecording = false;
+                    string final = recordedText.ToString().Trim();
+                    if (!string.IsNullOrWhiteSpace(final))
+                        OnTextFinalized?.Invoke(final);
+
+                    recordedText.Clear();
+                }
             }
         }
     }
